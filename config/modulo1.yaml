@@ -2,30 +2,45 @@
 # Todo valor normativo debe citar su fuente primaria (campo `fuente`).
 
 datos:
-  # TODO: confirmar ID del conjunto en datos.gov.co (Superintendencia de Transporte)
-  dataset_id: "TODO"
+  dataset_id: "eh75-8ah6"   # https://www.datos.gov.co/d/eh75-8ah6 (Superintendencia de Transporte)
   url_base: "https://www.datos.gov.co/resource"
-  rutas: []            # se llena tras el análisis exploratorio (rutas con mayor volumen)
-  fecha_inicio: null
-  fecha_fin: null
+  n_rutas: 5             # rutas con más pasajeros (las elige el notebook 01)
+  incluir_regreso: true  # descarga también el sentido destino→origen de cada ruta
+  fecha_inicio: "2019-08-01"
+  fecha_fin: "2026-10-31"     # el crudo trae fechas imposibles (año 6202)
+  inicio_validacion: "2025-01-01"
+  inicio_prueba: "2025-07-01" # incluye vacaciones de mitad de año, puentes y fin de año 2025
 
 pronostico:
   horizonte: 30        # días
   cuantil_alto: 0.9
-  origenes_rodantes: 6 # número de orígenes en la evaluación con origen rodante
+  paso_origen: 15      # días entre orígenes de la evaluación con origen rodante
 
 modelo:
-  tipo: "lstm"         # mlp | lstm | gru | cnn1d
+  tipo: "lstm"         # mlp | lstm | gru
   ventana: 28
   capas: 2
   unidades: 64
   dropout: 0.2
   optimizador: "adam"
   lr: 0.001
+  weight_decay: 0.0
+  batch: 64
   epocas: 100
   paciencia: 10
   perdida: "poisson"   # poisson | quantile
-  global: true         # un modelo global vs uno por ruta
+  global: true         # un modelo global (todas las rutas) con embedding de ruta
+
+busqueda:            # búsqueda aleatoria: presupuesto explícito (regla de comparación justa)
+  n_config: 20
+  espacio:
+    tipo: ["mlp", "lstm", "gru"]
+    ventana: [14, 28, 56]
+    capas: [1, 2]
+    unidades: [32, 64, 128]
+    dropout: [0.0, 0.1, 0.3]
+    lr: [0.0003, 0.001, 0.003]
+    weight_decay: [0.0, 0.0001]
 
 operacion:
   ocupacion_objetivo: 0.85
@@ -35,13 +50,16 @@ operacion:
     bus: 40
     buseta: 19
     microbus: 12
-  tiempo_ciclo_horas: {}  # por ruta, ida + regreso, TODO
+  clase_dimensionamiento: "bus"
+  tiempo_ciclo_horas: {}      # {ruta: horas ida+regreso incl. alistamiento}; TODO llenar por ruta
+  tiempo_ciclo_defecto: 8.0   # TODO: justificar (distancia/velocidad + tiempos en terminal)
+  dias_trabajo_semana: 6
   jornada_conductor:
-    horas_max_dia: null   # TODO: citar normativa colombiana vigente (fuente oficial)
-    fuente: "TODO"
-  costos:
-    pasajero_no_atendido: null
-    vehiculo_dia_sobrante: null
+    horas_max_dia: 8      # TODO VERIFICAR en la fuente oficial antes de usar
+    fuente: "TODO: norma colombiana vigente sobre jornada de conductores (texto oficial)"
+  costos:                 # relativos; sólo importa el cociente
+    pasajero_no_atendido: 1.0
+    vehiculo_dia_sobrante: 5.0
 
 demo:
   activo: false        # modo demostración (< 2 min)

@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+# Datos crudos pesados: se descargan con el notebook 01 (los procesados SÍ se versionan)
+modulo1_demanda/data/raw/*
+!modulo1_demanda/data/raw/.gitkeep

@@ -1,0 +1,49 @@
+# Módulo 1 - Pronóstico de demanda y planeación de la operación
+# Todo valor normativo debe citar su fuente primaria (campo `fuente`).
+
+datos:
+  # TODO: confirmar ID del conjunto en datos.gov.co (Superintendencia de Transporte)
+  dataset_id: "TODO"
+  url_base: "https://www.datos.gov.co/resource"
+  rutas: []            # se llena tras el análisis exploratorio (rutas con mayor volumen)
+  fecha_inicio: null
+  fecha_fin: null
+
+pronostico:
+  horizonte: 30        # días
+  cuantil_alto: 0.9
+  origenes_rodantes: 6 # número de orígenes en la evaluación con origen rodante
+
+modelo:
+  tipo: "lstm"         # mlp | lstm | gru | cnn1d
+  ventana: 28
+  capas: 2
+  unidades: 64
+  dropout: 0.2
+  optimizador: "adam"
+  lr: 0.001
+  epocas: 100
+  paciencia: 10
+  perdida: "poisson"   # poisson | quantile
+  global: true         # un modelo global vs uno por ruta
+
+operacion:
+  ocupacion_objetivo: 0.85
+  horas_operacion: 18
+  ausentismo: 0.05
+  capacidad_por_clase:  # TODO: citar fuente
+    bus: 40
+    buseta: 19
+    microbus: 12
+  tiempo_ciclo_horas: {}  # por ruta, ida + regreso, TODO
+  jornada_conductor:
+    horas_max_dia: null   # TODO: citar normativa colombiana vigente (fuente oficial)
+    fuente: "TODO"
+  costos:
+    pasajero_no_atendido: null
+    vehiculo_dia_sobrante: null
+
+demo:
+  activo: false        # modo demostración (< 2 min)
+  rutas: 2
+  epocas: 5

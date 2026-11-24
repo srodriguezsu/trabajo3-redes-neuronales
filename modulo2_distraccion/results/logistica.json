@@ -1,0 +1,20 @@
+{
+ "modelo": "logistica",
+ "C": 0.01,
+ "parametros": 2565,
+ "configuraciones": 4,
+ "segundos": 37.45704197883606,
+ "exactitud": 0.6261950286806883,
+ "f1_macro": 0.5994582432879365,
+ "perdida": 1.0065581798553467,
+ "precision_safe_driving": 0.7634854771784232,
+ "sensibilidad_safe_driving": 0.7049808429118773,
+ "precision_turning": 0.5792880258899676,
+ "sensibilidad_turning": 0.9470899470899471,
+ "precision_texting_phone": 0.4957983193277311,
+ "sensibilidad_texting_phone": 0.543778801843318,
+ "precision_talking_phone": 0.7288135593220338,
+ "sensibilidad_talking_phone": 0.6142857142857143,
+ "precision_other_activities": 0.5555555555555556,
+ "sensibilidad_other_activities": 0.26627218934911245
+}

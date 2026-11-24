@@ -1,0 +1,6 @@
+clase,c0 conducción segura,c1 escribir (mano derecha),c2 hablar (mano derecha),c3 escribir (mano izquierda),c4 hablar (mano izquierda),c5 manipular el radio,c6 beber,c7 alcanzar algo atrás,c8 peinarse o maquillarse,c9 hablar con el pasajero,no State Farm
+safe_driving,1531,0,0,0,0,0,0,0,0,0,148
+turning,0,0,0,0,0,0,0,1187,0,0,152
+texting_phone,0,751,0,754,0,0,0,0,0,0,56
+talking_phone,0,0,743,0,691,0,0,0,0,0,79
+other_activities,0,0,0,0,0,211,195,0,275,291,212

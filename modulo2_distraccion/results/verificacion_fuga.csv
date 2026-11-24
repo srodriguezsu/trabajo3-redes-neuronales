@@ -1,0 +1,4 @@
+particiones,pares_coseno,pares_hash,coseno_maximo,hamming_minimo,coseno_vecino_mediana
+entrenamiento / validacion,0,0,0.9589,5,0.9058
+entrenamiento / prueba,0,0,0.9597,5,0.9089
+validacion / prueba,0,0,0.9526,6,0.8846

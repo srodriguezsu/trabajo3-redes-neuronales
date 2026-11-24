@@ -6,3 +6,9 @@ __pycache__/
 # Datos crudos pesados: se descargan con el notebook 01 (los procesados SÍ se versionan)
 modulo1_demanda/data/raw/*
 !modulo1_demanda/data/raw/.gitkeep
+modulo2_distraccion/data/raw/*
+!modulo2_distraccion/data/raw/.gitkeep
+
+# notas locales de cada integrante (no se suben)
+privado/
+modulo2_distraccion/results/log_*.txt

@@ -1,0 +1,82 @@
+# Módulo 2 - Clasificación de conducción distractiva
+# Datos: Multi-Class Driver Behavior Image Dataset (Afridi et al., 2024), Mendeley Data
+# DOI 10.17632/mzb4b6dff3.1. Artículo: Data in Brief, DOI 10.1016/j.dib.2025.111529.
+
+datos:
+  url_zip: "https://data.mendeley.com/public-files/datasets/mzb4b6dff3/files/8d63eebb-fdcb-4d8e-b18c-683a9f570c82/file_downloaded"
+  sha256_zip: "427fec9d689a22856c51c7773adc6024158d5b228e36b2c9b58a13ce9af41c8c"
+  clases: [safe_driving, turning, texting_phone, talking_phone, other_activities]
+  # tamaño con que se guardan las imágenes procesadas (ancho x alto, 4:3 como la mayoría)
+  ancho: 224
+  alto: 168
+  calidad_jpg: 90
+
+particion:
+  # grupos de imágenes casi iguales (misma escena): nunca se separan entre particiones
+  umbral_similitud: 0.96     # coseno entre características de la red preentrenada (ver notebook 01)
+  umbral_hash: 4             # bits distintos del dHash de 64 bits
+  fraccion_validacion: 0.15
+  fraccion_prueba: 0.15
+
+entrenamiento:
+  tamano_lote: 64
+  epocas: 30
+  paciencia: 5
+  num_workers: 0
+
+cnn:                    # red convolucional desde cero
+  filtros: [32, 64, 128, 256]
+  dropout: 0.3
+  optimizador: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  aumento: medio        # ninguno | suave | medio | fuerte
+
+transfer:               # red preentrenada con ajuste fino
+  arquitectura: resnet18     # resnet18 | mobilenet_v3_small | efficientnet_b0
+  descongelar: todo          # cabeza | ultimo_bloque | todo
+  dropout: 0.2
+  optimizador: adamw
+  lr: 0.0003
+  weight_decay: 0.0001
+  aumento: medio
+
+logistica:              # referencia: regresión logística sobre características congeladas
+  extractor: resnet18
+  C: [0.01, 0.1, 1.0, 10.0]
+
+busqueda:               # búsqueda aleatoria con presupuesto explícito (mismo número por familia)
+  n_config: 16
+  epocas: 15
+  paciencia: 4
+  semilla: 42
+  espacio_cnn:
+    filtros: [[16, 32, 64, 128], [32, 64, 128, 256], [32, 64, 128, 256, 256]]
+    lr: [0.0003, 0.001, 0.003]
+    weight_decay: [0.0, 0.0001, 0.001]
+    dropout: [0.0, 0.2, 0.4]
+    aumento: [ninguno, suave, medio, fuerte]
+    optimizador: [adamw, sgd]
+  espacio_transfer:
+    arquitectura: [resnet18, mobilenet_v3_small, efficientnet_b0]
+    descongelar: [cabeza, ultimo_bloque, todo]
+    lr: [0.0001, 0.0003, 0.001]
+    weight_decay: [0.0, 0.0001, 0.001]
+    dropout: [0.0, 0.2, 0.4]
+    aumento: [ninguno, suave, medio, fuerte]
+    optimizador: [adamw, sgd]
+
+alertas:
+  # clases que disparan alerta; el resto es "sin alerta"
+  con_alerta: [texting_phone, talking_phone, other_activities]
+  umbral: 0.5           # alerta si P(clases con alerta) >= umbral
+  costo_no_detectada: 5.0   # relativo a una falsa alarma
+  costo_falsa_alarma: 1.0
+
+semillas:
+  n: 30
+
+demo:
+  activo: false         # modo demostración (< 2 min)
+  imagenes_por_clase: 60
+  epocas: 2
